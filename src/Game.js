@@ -5,9 +5,9 @@ export default class Game {
         this.width = width
         this.height = height
         this.gameObjects = [
-            new GameObject(this, 0, 100, 20, 20, '#000', 100),
-            new GameObject(this, 0, 200, 20, 20, '#f00', 200),
-            new GameObject(this, 0, 300, 20, 20, '#ff0', 300)
+            new GameObject(this, 0, 100, 20, 20, '#000', 100, 1),
+            new GameObject(this, 0, 200, 20, 20, '#f00', 200, 1),
+            new GameObject(this, 834, 300, 20, 20, '#ff0', 300, -1),
         ]
     }
 

@@ -1,5 +1,5 @@
 export default class GameObject {
-    constructor(game, x, y, width, height, color, maxSpeed) {
+    constructor(game, x, y, width, height, color, maxSpeed, direction) {
         this.game = game
         this.x = x
         this.y = y
@@ -8,7 +8,7 @@ export default class GameObject {
         this.color = color
         this.currentSpeed = 0
         this.maxSpeed = maxSpeed
-        this.direction = 1
+        this.direction = direction
     }
 
     update(deltaTime) {
