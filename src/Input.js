@@ -4,7 +4,6 @@ export default class input{
         this.keys = new Set()
 
         window.addEventListener("keydown", (event) => {
-            console.log(event.key)
             this.keys.add(event.key)
         })
 
@@ -13,7 +12,6 @@ export default class input{
         })
 
         window.addEventListener("click", (event) => {
-            console.log(event.clientY)
         })
     }
 }
