@@ -34,8 +34,8 @@ export default class Player extends GameObject {
             this.flip = true
         }
         if (this.game.input.keys.has("ArrowRight")) {
-            this.flip = false
             this.speedX += this.maxSpeedX
+            this.flip = false
         }
         if (this.game.input.keys.has("ArrowRight") || this.game.input.keys.has("ArrowLeft")) {
             this.frameY = 1
@@ -43,9 +43,9 @@ export default class Player extends GameObject {
             this.fps = Math.abs(this.speedX) * 5
         }
 
-        if (this.y >= (400 - this.height)) {
+        if (this.y >= (450 - this.height)) {
             this.speedY = 0
-            this.y = (400 - this.height)
+            this.y = (450 - this.height)
             if (this.game.input.keys.has("ArrowUp")) {
                 this.speedY -= 20
             }
@@ -88,8 +88,14 @@ export default class Player extends GameObject {
             this.frameX = 1
         }
 
-        if (Math.abs(this.x) > 1000) {
-            this.x *= -1
+        if (this.x < 0) {
+            this.x = 0
+            this.speedX = 0
+        }
+
+        if (this.x + this.width > 854) {
+            this.x = 854 - this.width
+            this.speedX = 0
         }
     }
 
@@ -110,11 +116,12 @@ export default class Player extends GameObject {
             this.flip ? this.oldX * -1 - this.width : this.oldX,
             this.oldY,
             this.width,
-            this.height)
-
-        //ctx.drawImage(this.image, this.x, this.y, this.width, this.height)
+            this.height)       
 
         ctx.globalAlpha = 1
+
+        ctx.fillStyle = "red"
+        ctx.fillRect(this.x, this.y, this.width, this.height)
 
         ctx.drawImage(
             this.image,
@@ -126,7 +133,7 @@ export default class Player extends GameObject {
             this.y,
             this.width,
             this.height)
-
+            
         if (this.flip) {
             ctx.restore()
         }
