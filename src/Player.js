@@ -23,9 +23,18 @@ export default class Player extends GameObject {
         this.maxSpeedY = speed
         this.height = height
         this.width = width
+
+        this.dashSpeed = 30
+        this.dashCount = 0
+        this.dashDelay = true
+        this.dashDirection = 0
     }
 
     update(deltaTime) {
+        // console.log(this.grounded)
+        // console.log(this.x, this.y)
+        // console.log(this.speedX, this.speedY)
+
         this.oldX = this.x
         this.oldY = this.y
 
@@ -33,21 +42,53 @@ export default class Player extends GameObject {
             this.speedX -= this.maxSpeedX
             this.flip = true
         }
+
         if (this.game.input.keys.has("ArrowRight")) {
             this.speedX += this.maxSpeedX
             this.flip = false
         }
+
         if (this.game.input.keys.has("ArrowRight") || this.game.input.keys.has("ArrowLeft")) {
             this.frameY = 1
             this.maxFrames = 6
             this.fps = Math.abs(this.speedX) * 5
         }
 
-        if (this.y >= (450 - this.height)) {
+        if (this.game.input.keys.has("Shift") && this.dashCount > 0 && this.dashDelay) {
+            console.log("Dash")
+            if (this.game.input.keys.has("ArrowRight")){
+                this.dashDirection = 0
+            }
+            if (this.game.input.keys.has("ArrowLeft")){
+                this.dashDirection = 180
+            }
+            if (this.game.input.keys.has("ArrowUp")){
+                this.dashDirection = ((this.dashDirection+90)/2)
+            }
+            if (this.game.input.keys.has("ArrowDown")){
+                this.dashDirection = ((this.dashDirection+270)/2)
+            }
+
+            this.speedX = Math.cos(this.dashDirection) * this.dashSpeed
+            this.speedY = Math.sin(this.dashDirection) * this.dashSpeed
+
+            
+            this.dashCount--
+            this.dashDelay = false
+
+            setTimeout(() => {
+                this.dashDelay = true
+            }, 200);
+        }
+
+        if (this.grounded) {
+            if (this.dashCount == 0 && this.dashDelay) {
+                this.dashCount++
+            }
             this.speedY = 0
-            this.y = (450 - this.height)
-            if (this.game.input.keys.has("ArrowUp")) {
+            if (this.game.input.keys.has("ArrowUp") || this.game.input.keys.has(" ")) {
                 this.speedY -= 20
+                this.grounded = false
             }
             if (this.game.input.keys.has("ArrowRight") && this.game.input.keys.has("ArrowLeft") || !this.game.input.keys.has("ArrowRight") && !this.game.input.keys.has("ArrowLeft") || this.speedX > 0 && this.game.input.keys.has("ArrowLeft") || this.speedX < 0 && this.game.input.keys.has("ArrowRight")) {
                 this.speedX *= 0.6
@@ -97,16 +138,28 @@ export default class Player extends GameObject {
             this.x = 854 - this.width
             this.speedX = 0
         }
+
+        if (this.y > 500) {
+            this.x = 0;
+            this.y = 0;
+        }
     }
 
     draw(ctx) {
+        if (this.dashCount > 0 && this.dashDelay) {
+            ctx.fillStyle = "blue"
+        } else {
+            ctx.fillStyle = "red"
+        }
+        ctx.fillRect(this.x, this.y, this.width, this.height)
+
         if (this.flip) {
             ctx.save()
             ctx.scale(-1, 1)
         }
 
         ctx.globalAlpha = 0.1
-
+        
         ctx.drawImage(
             this.image,
             this.frameWidth * this.frameX,
@@ -116,13 +169,10 @@ export default class Player extends GameObject {
             this.flip ? this.oldX * -1 - this.width : this.oldX,
             this.oldY,
             this.width,
-            this.height)       
-
-        ctx.globalAlpha = 1
-
-        ctx.fillStyle = "red"
-        ctx.fillRect(this.x, this.y, this.width, this.height)
-
+            this.height)
+            
+            ctx.globalAlpha = 1
+            
         ctx.drawImage(
             this.image,
             this.frameWidth * this.frameX,
@@ -133,7 +183,7 @@ export default class Player extends GameObject {
             this.y,
             this.width,
             this.height)
-            
+
         if (this.flip) {
             ctx.restore()
         }
