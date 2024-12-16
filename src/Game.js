@@ -17,10 +17,6 @@ export default class Game {
     }
 
     update(deltaTime) {
-        //if (this.checkCollision(this.player, this.box)) {
-        //  this.player.x = this.box.x
-        //}
-
         let a = 0;
         this.platforms.forEach((platform) => {
             if (this.checkPlatformCollision(this.player, platform)) {
@@ -32,20 +28,12 @@ export default class Game {
                 this.player.grounded = true
             }
         })
-
         this.player.update(deltaTime)
     }
 
     draw(ctx) {
         this.player.draw(ctx)
         this.platforms.forEach((platform) => platform.draw(ctx))
-    }
-
-    checkOverlap(a, b) {
-        return a.x < b.x + b.width &&
-            a.x + a.width > b.x &&
-            a.y < b.y + b.height &&
-            a.y + a.height > b.y
     }
 
     checkPlatformCollision(object, platform) {
@@ -71,6 +59,9 @@ export default class Game {
                     object.y = platform.y - object.height
                 }
                 object.grounded = true;
+                if (object.oldY < object.y) {
+                    this.landingParticles((object.x + object.width)/2, platform.y)
+                }
                 return true
             } else {
                 object.grounded = false;
@@ -87,5 +78,12 @@ export default class Game {
                 object.y = platform.y + platform.height
             }
         }
+    }
+    landingParticles(x, y) {
+        console.log("coola partiklar")
+        //spawna några random stora partiklar
+        //ge de en random direction och hastighet snett uppåt
+        //gör att de är påverkade av gravitation
+        //gör att de försvinner när de träffar marken
     }
 }
