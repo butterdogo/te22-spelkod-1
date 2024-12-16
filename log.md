@@ -14,3 +14,9 @@
 2. Fixa dash och platfrom (inget kommer funka)
 3. Jag sover
 4. Att vakna
+
+### 12-16
+1. Försökte plattform
+2. Fixa plattform (det funkar idag (trust))
+3. Jag sover igen
+4. Jag borde vakna
