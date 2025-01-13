@@ -19,6 +19,9 @@ export default class Player extends GameObject {
         this.timer = 0
         this.fps = 20
 
+        this.respawnX = 0
+        this.respawnY = 0
+
         this.speedX = 0
         this.maxSpeedX = speed
         this.speedY = 0
@@ -30,7 +33,6 @@ export default class Player extends GameObject {
         this.dashCount = 0
         this.dashDelay = true
         this.dashDirection = 0
-        //const platforms = getPlatforms()
     }
 
     update(deltaTime) {
@@ -182,19 +184,9 @@ export default class Player extends GameObject {
             this.frameX = 1
         }
 
-        if (this.x < 0) {
-            this.x = 0
-            this.speedX = 0
-        }
-
-        if (this.x + this.width > window.innerWidth) {
-            this.x = window.innerWidth - this.width
-            this.speedX = 0
-        }
-
+       
         if (this.y > window.innerHeight) {
-            this.x = 0;
-            this.y = 0;
+            this.respawn()
         }
     }
 
@@ -259,5 +251,12 @@ export default class Player extends GameObject {
     degToRad(deg) {
         const rad = deg * (Math.PI) / 180
         return rad
+    }
+    
+    respawn(){
+        this.x = this.respawnX;
+        this.y = this.respawnY;
+        this.speedX = 0;
+        this.speedY = 0;
     }
 }
