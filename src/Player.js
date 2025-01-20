@@ -8,16 +8,16 @@ export default class Player extends GameObject {
         this.game = game
 
         this.image = new Image()
-        this.image.src = "/src/assets/foxy.png"
+        this.image.src = "./src/assets/Player-pixel-2.png"
 
-        this.frameWidth = 33
-        this.frameHeight = 32
+        this.frameWidth = 64
+        this.frameHeight = 64
         this.frameX = 0
         this.frameY = 0
         this.flip = false
-        this.maxFrames = 4
+        this.maxFrames = 1
         this.timer = 0
-        this.fps = 20
+        this.fps = 10
 
         this.respawnX = 0
         this.respawnY = 0
@@ -33,6 +33,10 @@ export default class Player extends GameObject {
         this.dashCount = 0
         this.dashDelay = true
         this.dashDirection = 0
+
+        this.wallGrabbable = false
+        this.wallGrab = false
+        this.climbSpeed = 2
     }
 
     update(deltaTime) {
@@ -55,7 +59,7 @@ export default class Player extends GameObject {
 
         if (this.game.input.keys.has("ArrowRight") || this.game.input.keys.has("ArrowLeft")) {
             this.frameY = 1
-            this.maxFrames = 6
+            this.maxFrames = 3
             this.fps = Math.abs(this.speedX) * 5
         }
 
@@ -73,7 +77,7 @@ export default class Player extends GameObject {
             if (this.game.input.keys.has("ArrowRight") && this.game.input.keys.has("ArrowLeft") || !this.game.input.keys.has("ArrowRight") && !this.game.input.keys.has("ArrowLeft") || this.speedX > 0 && this.game.input.keys.has("ArrowLeft") || this.speedX < 0 && this.game.input.keys.has("ArrowRight")) {
                 this.speedX *= 0.6
                 this.frameY = 0
-                this.maxFrames = 4
+                this.maxFrames = 1
                 this.fps = 15
                 if (this.speedX < 0.1 && this.speedX > -0.1) {
                     this.speedX = 0
@@ -157,12 +161,26 @@ export default class Player extends GameObject {
             }, 200);
         }
 
+        if(this.wallGrabbable && !this.grounded && this.game.input.keys.has("Control")){
+            this.game.dontfuckupmyshit = 0
+            console.log("grab")
+            this.wallGrab = true
+            this.speedY = 0
+            this.speedX = 0
+            if(this.game.input.keys.has("ArrowUp")){
+                this.speedY = -this.climbSpeed
+            }
+            if(this.game.input.keys.has("ArrowDown")){
+                this.speedY = this.climbSpeed
+            }
+        } else{
+            this.wallGrab = false
+        }
 
         this.x += this.speedX
         this.y += this.speedY
 
         if (this.speedY < 0) {
-            this.frameY = 5
             this.maxFrames = 1
         }
 
@@ -178,15 +196,13 @@ export default class Player extends GameObject {
         if (this.frameX >= this.maxFrames) {
             this.frameX = 0
         }
-
-        if (this.speedY > 0) {
-            this.frameY = 5
-            this.frameX = 1
-        }
-
        
         if (this.y > window.innerHeight) {
             this.respawn()
+        }
+
+        if(this.game.levelNumber == 1 && this.x >= 1000){
+            this.game.gameOver = true
         }
     }
 
@@ -217,6 +233,8 @@ export default class Player extends GameObject {
             this.height)
 
         ctx.globalAlpha = 1
+        ctx.fillStyle = "#00ff00"
+        ctx.fillRect(this.x, this.y, this.width, this.height),
 
         ctx.drawImage(
             this.image,

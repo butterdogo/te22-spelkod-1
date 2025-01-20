@@ -11,7 +11,7 @@ export default class Platform {
     update() {}
   
     draw(context) {
-      context.fillStyle = '#795548'
+      context.fillStyle = '#ffffff'
       if(this.harm){
         context.fillStyle = "#ff0000"
       }
