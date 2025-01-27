@@ -3,8 +3,8 @@ import Layer from './Layer'
 export default class Background {
   constructor(game) {
     this.game = game
-    this.width = window.innerWidth
-    this.height = window.innerHeight
+    this.width = 1920
+    this.height = 1080
     this.gameon = true
     this.ml = new Image()
     this.ml.src = "./src/assets/FG-pixel.png"

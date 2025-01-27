@@ -42,6 +42,7 @@ export default class Game {
         this.platforms = this.platformsArray[0]
         this.player.respawnX = this.spawnpoints[0][0]
         this.player.respawnY = this.spawnpoints[0][1]
+        this.levelCount = this.platformsArray.length - 1
     }
 
     update(deltaTime) {
@@ -51,22 +52,23 @@ export default class Game {
             this.gameTime += deltaTime
         }
 
-        if (this.player.x > window.innerWidth) {
+        if (this.player.x > this.width) {
             if (this.levelNumber < this.platformsArray.length - 1) {
+                this.player.wallGrabbable = false
                 this.levelNumber++
                 this.player.x = 0
                 this.platforms = this.platformsArray[this.levelNumber]
                 this.player.respawnX = this.spawnpoints[this.levelNumber][0]
                 this.player.respawnY = this.spawnpoints[this.levelNumber][1]
             } else {
-                this.player.x = window.innerWidth - this.player.width
+                this.player.x = this.width - this.player.width
                 this.player.speedX = 0
             }
         }
         if (this.player.x < 0) {
             if (this.levelNumber > 0) {
                 this.levelNumber--
-                this.player.x = window.innerWidth
+                this.player.x = this.width
                 this.platforms = this.platformsArray[this.levelNumber]
                 this.player.respawnX = this.spawnpoints[this.levelNumber][0]
                 this.player.respawnY = this.spawnpoints[this.levelNumber][1]
@@ -87,7 +89,6 @@ export default class Game {
             }
             if (a > 0) {
                 this.player.grounded = true
-                this.player.wallGrabbable = true
             }
         })
         this.player.update(deltaTime)
@@ -106,9 +107,11 @@ export default class Game {
                 object.speedX = 0
                 if (!object.wallGrab) {
                     if (object.oldX < object.x) {
+                        this.player.wallside = 1
                         object.x = platform.x - object.width
                     }
                     if (object.oldX > object.x) {
+                        this.player.wallside = 0
                         object.x = platform.x + platform.width
                     }
                     if (platform.harm) {

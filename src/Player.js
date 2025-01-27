@@ -29,6 +29,8 @@ export default class Player extends GameObject {
         this.height = height
         this.width = width
 
+        this.jump = 20
+
         this.dashSpeed = 30
         this.dashCount = 0
         this.dashDelay = true
@@ -37,13 +39,10 @@ export default class Player extends GameObject {
         this.wallGrabbable = false
         this.wallGrab = false
         this.climbSpeed = 2
+        this.wallside
     }
 
     update(deltaTime) {
-        // console.log(this.grounded)
-        // console.log(this.x, this.y)
-        // console.log(this.speedX, this.speedY)
-
         this.oldX = this.x
         this.oldY = this.y
 
@@ -71,7 +70,7 @@ export default class Player extends GameObject {
             }
             this.speedY = 0
             if (this.game.input.keys.has("ArrowUp") || this.game.input.keys.has(" ")) {
-                this.speedY -= 20
+                this.speedY -= this.jump
                 this.grounded = false
             }
             if (this.game.input.keys.has("ArrowRight") && this.game.input.keys.has("ArrowLeft") || !this.game.input.keys.has("ArrowRight") && !this.game.input.keys.has("ArrowLeft") || this.speedX > 0 && this.game.input.keys.has("ArrowLeft") || this.speedX < 0 && this.game.input.keys.has("ArrowRight")) {
@@ -86,39 +85,6 @@ export default class Player extends GameObject {
         } else {
             this.speedY += 1
         }
-
-        /*//Horizontal collision
-        let horizontal = {
-            x: this.x + this.speedX,
-            y: this.y,
-            widht: this.width,
-            height: this.height
-        }
-
-        //Vertical collision
-        let vertical = {
-            x: this.x,
-            y: this.y + this.speedY,
-            widht: this.width,
-            height: this.height
-        }
-
-        //check intersection
-        for (let i = 0; i < platforms.length; i++) {
-            console.log(i)
-            let platform = {
-                x: this.platforms[i].x,
-                y: this.platforms[i].y,
-                width: this.platforms[i].width,
-                height: this.platforms[i].height,
-            }
-            if (this.checkCollision(horizontal, platform)) {
-                this.speedX = 0;
-            }
-            if (this.checkCollision(vertical, platform)) {
-                this.speedY = 0;
-            }
-        }*/
 
         if (this.game.input.keys.has("Shift") && this.dashCount > 0 && this.dashDelay) {
             console.log("Dash")
@@ -177,6 +143,16 @@ export default class Player extends GameObject {
             this.wallGrab = false
         }
 
+        if(this.wallGrab && this.game.input.keys.has(" ")){
+            this.speedY = this.jump * -Math.sin(this.degToRad(45))
+            if (this.wallside == 1){
+                this.speedX = this.jump * -Math.cos(this.degToRad(45))
+            }
+            if (this.wallside == 0){
+                this.speedX = this.jump * Math.cos(this.degToRad(45))
+            }
+        }
+
         this.x += this.speedX
         this.y += this.speedY
 
@@ -197,23 +173,16 @@ export default class Player extends GameObject {
             this.frameX = 0
         }
        
-        if (this.y > window.innerHeight) {
+        if (this.y > this.game.height) {
             this.respawn()
         }
 
-        if(this.game.levelNumber == 1 && this.x >= 1000){
+        if(this.game.levelNumber == this.game.levelCount && this.x >= 1800){
             this.game.gameOver = true
         }
     }
 
     draw(ctx) {
-        /*if (this.dashCount > 0 && this.dashDelay) {
-            ctx.fillStyle = "blue"
-        } else {
-            ctx.fillStyle = "red"
-        }
-        ctx.fillRect(this.x, this.y, this.width, this.height)*/
-
         if (this.flip) {
             ctx.save()
             ctx.scale(-1, 1)
@@ -233,8 +202,6 @@ export default class Player extends GameObject {
             this.height)
 
         ctx.globalAlpha = 1
-        ctx.fillStyle = "#00ff00"
-        ctx.fillRect(this.x, this.y, this.width, this.height),
 
         ctx.drawImage(
             this.image,

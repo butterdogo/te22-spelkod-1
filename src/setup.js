@@ -3,8 +3,8 @@ import Game from './Game.js'
 export function setup(canvas) {
   const ctx = canvas.getContext('2d') // Skapar en 2d-kontext för att rita på canvas
   // 16:9 aspect ratio
-  canvas.width = window.innerWidth 
-  canvas.height = window.innerHeight 
+  canvas.width = 1920
+  canvas.height = 1080
 
   const game = new Game(canvas.width, canvas.height)
   let lastTime = 0
