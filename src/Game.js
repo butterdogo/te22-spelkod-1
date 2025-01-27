@@ -159,9 +159,5 @@ export default class Game {
     }
     landingParticles(x, y) {
         console.log("coola partiklar")
-        //spawna några random stora partiklar
-        //ge de en random direction och hastighet snett uppåt
-        //gör att de är påverkade av gravitation
-        //gör att de försvinner när de träffar marken
     }
 }

@@ -20,3 +20,6 @@
 2. Fixa plattform (det funkar idag (trust))
 3. Jag sover igen
 4. Jag borde vakna
+
+### 01-27
+1. Jag fixade det sista med wallclimben och walljumpen så allt fungerar som det ska.  
