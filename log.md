@@ -23,3 +23,5 @@
 
 ### 01-27
 1. Jag fixade det sista med wallclimben och walljumpen så allt fungerar som det ska.  
+
+Henrico log
