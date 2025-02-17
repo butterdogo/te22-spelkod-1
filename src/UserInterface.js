@@ -20,6 +20,12 @@ export default class UserInterface {
         20,
         100
       )
+      context.fillText(
+        `Time: ${(this.game.gameTime * 0.001).toFixed(1)}`,
+        20,
+        100
+      )
+
   
       if (this.game.gameOver) {
         context.textAlign = 'center'
