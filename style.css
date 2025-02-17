@@ -13,7 +13,7 @@
   -moz-osx-font-smoothing: grayscale;
 }
 canvas {
-  max-width: 100%;
+  max-width: 80%;
 }
 
 a {
